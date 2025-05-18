@@ -29,7 +29,7 @@ WHERE
 ```
 
 ### Description:
-This query retrieves detailed column information from the 'columns' table in the 'information_schema' database, focusing on a specified database (replace 'your_database' with the actual database name). The output is a well-formatted, comma-separated list of concatenated strings. Each string contains information about a column in a table, including the table name, column name, data type, and whether it is a primary key. The result is labeled with the alias 'Table_Column_Information'.
+This query retrieves and compiles detailed metadata about all the columns in every table within a specified database (`your_database`). It pulls information from the `information_schema.COLUMNS` and `information_schema.KEY_COLUMN_USAGE` system views to list each column's table name, column name, data type, and whether it is a primary key or a foreign key. If a column is a foreign key, the query also indicates the referenced table and column. The results are concatenated into a single string using `GROUP_CONCAT`, with each column's details presented on a new line, providing a clear, descriptive summary of the database structure and its key relationships in a compact, readable format.
 
 ---
 
