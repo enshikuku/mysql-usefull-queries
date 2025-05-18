@@ -6,16 +6,26 @@
 SELECT
     GROUP_CONCAT(
         CONCAT(
-            'Table Name: ', TABLE_NAME,
-            '; Column Name: ', COLUMN_NAME,
-            '; Data Type: ', DATA_TYPE,
-            IF(COLUMN_KEY = 'PRI', '; Primary Key', '')
-        )
+            'Table Name: ', c.TABLE_NAME,
+            '; Column Name: ', c.COLUMN_NAME,
+            '; Data Type: ', c.DATA_TYPE,
+            IF(c.COLUMN_KEY = 'PRI', '; Primary Key', ''),
+            IF(kcu.REFERENCED_TABLE_NAME IS NOT NULL,
+               CONCAT('; Foreign Key to ', kcu.REFERENCED_TABLE_NAME, '(', kcu.REFERENCED_COLUMN_NAME, ')'),
+               ''
+            )
+        ) SEPARATOR '\n'
     ) AS Table_Column_Information
 FROM
-    information_schema.columns
+    information_schema.COLUMNS c
+LEFT JOIN
+    information_schema.KEY_COLUMN_USAGE kcu
+    ON c.TABLE_SCHEMA = kcu.TABLE_SCHEMA
+    AND c.TABLE_NAME = kcu.TABLE_NAME
+    AND c.COLUMN_NAME = kcu.COLUMN_NAME
+    AND kcu.REFERENCED_TABLE_NAME IS NOT NULL
 WHERE
-    TABLE_SCHEMA = 'your_database';
+    c.TABLE_SCHEMA = 'your_database';
 ```
 
 ### Description:
